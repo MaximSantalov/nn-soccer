@@ -57,4 +57,11 @@ class Fetcher:
         matches = cur.fetchall()
         return matches
 
+    def get_leagues(self):
+        cur = self.conn.cursor()
+        cur.execute("""SELECT *
+                        FROM League
+                        JOIN Country ON Country.id = League.country_id;""")
+        return cur.fetchall()
+
 # fetcher = Fetcher("data/database.sqlite")
