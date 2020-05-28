@@ -26,14 +26,35 @@ class Fetcher:
         player_attrs = cur.fetchall()
         return (player, player_attrs)
 
-"""
-fetcher = Fetcher("data/database.sqlite")
-(player, attrs) = fetcher.get_player_data(505942)
-print(player)
-print()
-print()
-for row in attrs:
-    print(row)
-    print()
-    print()
-"""
+    # returns a tuple (team, team_attrs)
+    # the meaning of these is the same as in get_player_data
+    def get_team_data (self, api_id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM Team WHERE team_api_id=?", (api_id,))
+        team = cur.fetchone()
+        cur.execute("SELECT * FROM Team_Attributes WHERE team_api_id=?", (api_id,))
+        team_attrs = cur.fetchall()
+        return (team, team_attrs)
+
+    # returns all player_api_ids that are present in the data
+    def get_player_api_ids (self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT DISTINCT player_api_id FROM Player")
+        api_ids = cur.fetchall()
+        return [d['player_api_id'] for d in api_ids]
+
+    # returns all team_api_ids that are present in the data
+    def get_team_api_ids (self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT DISTINCT team_api_id FROM Team")
+        api_ids = cur.fetchall()
+        return [d['team_api_id'] for d in api_ids]
+
+    # returns everything about every match
+    def get_all_matches (self):
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM Match")
+        matches = cur.fetchall()
+        return matches
+
+# fetcher = Fetcher("data/database.sqlite")
